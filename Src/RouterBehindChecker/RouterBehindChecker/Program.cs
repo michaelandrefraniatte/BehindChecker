@@ -19,17 +19,6 @@ namespace RouterBehindChecker
         public static extern uint TimeEndPeriod(uint ms);
         [DllImport("ntdll.dll", EntryPoint = "NtSetTimerResolution")]
         public static extern void NtSetTimerResolution(uint DesiredResolution, bool SetResolution, ref uint CurrentResolution);
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-        [DllImport("Kernel32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        private static extern IntPtr GetConsoleWindow();
-        [DllImport("User32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ShowWindow([In] IntPtr hWnd, [In] Int32 nCmdShow);
-        const Int32 SW_MINIMIZE = 6;
-        static ConsoleEventDelegate handler;
-        private delegate bool ConsoleEventDelegate(int eventType);
-        public static ThreadStart threadstart;
         public static Thread thread;
         public static uint CurrentResolution = 0;
         public static int processid = 0;
@@ -37,11 +26,8 @@ namespace RouterBehindChecker
         private static INetFwPolicy2 firewallpolicy;
         static void Main(string[] args)
         {
-            MinimizeConsoleWindow();
-            handler = new ConsoleEventDelegate(ConsoleEventCallback);
-            SetConsoleCtrlHandler(handler, true);
-            bool runelevated = false;
-            bool oneinstanceonly = true;
+            bool runelevated = true;
+            bool oneinstanceonly = false;
             try
             {
                 TimeBeginPeriod(1);
@@ -110,7 +96,6 @@ namespace RouterBehindChecker
                 Thread.Sleep(1);
             }
             while (!(IP0 == Convert.ToInt32(IPEndElements[0]) & IP1 == Convert.ToInt32(IPEndElements[1]) & IP2 == Convert.ToInt32(IPEndElements[2]) & IP3 == Convert.ToInt32(IPEndElements[3])));
-            Console.ReadKey();
         }
         private static bool SearchRouter(string IP)
         {
@@ -175,25 +160,6 @@ namespace RouterBehindChecker
                 return true;
             else
                 return false;
-        }
-        private static void MinimizeConsoleWindow()
-        {
-            IntPtr hWndConsole = GetConsoleWindow();
-            ShowWindow(hWndConsole, SW_MINIMIZE);
-        }
-        static bool ConsoleEventCallback(int eventType)
-        {
-            if (eventType == 2)
-            {
-                threadstart = new ThreadStart(FormClose);
-                thread = new Thread(threadstart);
-                thread.Start();
-            }
-            return false;
-        }
-        private static void FormClose()
-        {
-            TimeEndPeriod(1);
         }
     }
 }
