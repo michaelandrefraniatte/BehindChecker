@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Diagnostics;
 using System.Windows.Forms;
 using NetFwTypeLib;
+using System.Collections.Generic;
 
 namespace RouterBehindChecker
 {
@@ -24,6 +25,9 @@ namespace RouterBehindChecker
         public static int processid = 0;
         private static INetFwRule2 newRule;
         private static INetFwPolicy2 firewallpolicy;
+        private static List<string> list = new List<string>(), templist = new List<string>();
+        private static string ip, tempip;
+        private static bool found, tempfound;
         static void Main(string[] args)
         {
             bool runelevated = true;
@@ -62,10 +66,14 @@ namespace RouterBehindChecker
             int IP0 = Convert.ToInt32(IPStartElements[0]), IP1 = Convert.ToInt32(IPStartElements[1]), IP2 = Convert.ToInt32(IPStartElements[2]), IP3 = Convert.ToInt32(IPStartElements[3]);
             do
             {
-                string ip = IP0 + "." + IP1 + "." + IP2 + "." + IP3;
+                tempip = ip;
+                tempfound = found;
+                templist = list;
+                ip = IP0 + "." + IP1 + "." + IP2 + "." + IP3;
                 if (SearchRouter(ip))
                 {
-                    addToFirewall(ip);
+                    found = true;
+                    list.Add(ip);
                     Console.WriteLine("router behind: " + ip);
                     using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
                     {
@@ -75,8 +83,14 @@ namespace RouterBehindChecker
                 }
                 else
                 {
+                    found = false;
+                    list.Clear();
                     Console.WriteLine(ip);
                 }
+                if (tempfound & !found & templist.Count == 1)
+                    addToFirewall(tempip);
+                if (tempfound & !found & templist.Count > 1)
+                    addToFirewall(templist[0] + "-" + templist[templist.Count - 1]);
                 IP3++;
                 if (IP3 > 255)
                 {
