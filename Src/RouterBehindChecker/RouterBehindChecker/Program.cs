@@ -109,6 +109,7 @@ namespace RouterBehindChecker
                 Thread.Sleep(1);
             }
             while (ip != IPEnd);
+            Thread.Sleep(1000);
         }
         private static bool SearchRouter(string IP)
         {
