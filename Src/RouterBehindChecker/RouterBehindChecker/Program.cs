@@ -6,8 +6,9 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using NetFwTypeLib;
+
 namespace RouterBehindChecker
 {
     internal class Program
@@ -32,6 +33,8 @@ namespace RouterBehindChecker
         public static Thread thread;
         public static uint CurrentResolution = 0;
         public static int processid = 0;
+        private static INetFwRule2 newRule;
+        private static INetFwPolicy2 firewallpolicy;
         static void Main(string[] args)
         {
             MinimizeConsoleWindow();
@@ -76,6 +79,7 @@ namespace RouterBehindChecker
                 string ip = IP0 + "." + IP1 + "." + IP2 + "." + IP3;
                 if (SearchRouter(ip))
                 {
+                    addToFirewall(ip);
                     Console.WriteLine("router behind: " + ip);
                     using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
                     {
@@ -125,6 +129,20 @@ namespace RouterBehindChecker
             {
                 return false;
             }
+        }
+        private static void addToFirewall(string IP)
+        {
+            newRule = (INetFwRule2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
+            newRule.Name = IP;
+            newRule.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
+            newRule.RemoteAddresses = IP;
+            newRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+            newRule.Enabled = true;
+            newRule.InterfaceTypes = "All";
+            newRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
+            newRule.EdgeTraversal = false;
+            firewallpolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+            firewallpolicy.Rules.Add(newRule);
         }
         public static bool hasAdminRights()
         {

@@ -22,3 +22,11 @@ C:\Users\micha\Documents\GitHub\BehindChecker\RouterBehindChecker\RouterBehindCh
 C:\Users\micha\Documents\GitHub\BehindChecker\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.csproj.CoreCompileInputs.cache
 C:\Users\micha\Documents\GitHub\BehindChecker\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.exe
 C:\Users\micha\Documents\GitHub\BehindChecker\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.pdb
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\bin\Release\RouterBehindChecker.exe.config
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\bin\Release\RouterBehindChecker.exe
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\bin\Release\RouterBehindChecker.pdb
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.csproj.AssemblyReference.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.csproj.SuggestedBindingRedirects.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.csproj.CoreCompileInputs.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.exe
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBehindChecker\RouterBehindChecker\obj\Release\RouterBehindChecker.pdb
