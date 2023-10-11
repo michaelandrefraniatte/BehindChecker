@@ -30,38 +30,32 @@ namespace RouterBehindChecker
         private static string ip;
         static void Main(string[] args)
         {
+            TimeBeginPeriod(1);
+            NtSetTimerResolution(1, true, ref CurrentResolution);
+            SetProcessPriority();
             bool runelevated = true;
             bool oneinstanceonly = false;
-            try
+            if (oneinstanceonly)
             {
-                TimeBeginPeriod(1);
-                NtSetTimerResolution(1, true, ref CurrentResolution);
-                SetProcessPriority();
-                if (oneinstanceonly)
+                if (AlreadyRunning())
                 {
-                    if (AlreadyRunning())
-                    {
-                        return;
-                    }
-                }
-                if (runelevated)
-                {
-                    if (!hasAdminRights())
-                    {
-                        RunElevated();
-                        return;
-                    }
+                    return;
                 }
             }
-            catch
+            if (runelevated)
             {
-                return;
+                if (!hasAdminRights())
+                {
+                    RunElevated();
+                    return;
+                }
             }
-            Console.WriteLine("\tIP Start ?");
-            string IPStart = Console.ReadLine();
+            Console.WriteLine("\tEnter a IP Range like 192.168.1.0-192.168.1.12");
+            string IPRange = Console.ReadLine();
+            string[] IPRangeElements = IPRange.Split('-');
+            string IPStart = IPRangeElements[0];
             string[] IPStartElements = IPStart.Split('.');
-            Console.WriteLine("\tIP End ?");
-            string IPEnd = Console.ReadLine();
+            string IPEnd = IPRangeElements[1];
             int IP0 = Convert.ToInt32(IPStartElements[0]), IP1 = Convert.ToInt32(IPStartElements[1]), IP2 = Convert.ToInt32(IPStartElements[2]), IP3 = Convert.ToInt32(IPStartElements[3]);
             do
             {
