@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using NetFwTypeLib;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RouterBehindChecker
 {
@@ -26,8 +27,7 @@ namespace RouterBehindChecker
         private static INetFwRule2 newRule;
         private static INetFwPolicy2 firewallpolicy;
         private static List<string> list = new List<string>(), templist = new List<string>();
-        private static string ip, tempip;
-        private static bool found, tempfound;
+        private static string ip;
         static void Main(string[] args)
         {
             bool runelevated = true;
@@ -62,35 +62,40 @@ namespace RouterBehindChecker
             string[] IPStartElements = IPStart.Split('.');
             Console.WriteLine("\tIP End ?");
             string IPEnd = Console.ReadLine();
-            string[] IPEndElements = IPEnd.Split('.');
             int IP0 = Convert.ToInt32(IPStartElements[0]), IP1 = Convert.ToInt32(IPStartElements[1]), IP2 = Convert.ToInt32(IPStartElements[2]), IP3 = Convert.ToInt32(IPStartElements[3]);
             do
             {
-                tempip = ip;
-                tempfound = found;
-                templist = list;
                 ip = IP0 + "." + IP1 + "." + IP2 + "." + IP3;
-                if (SearchRouter(ip))
+                bool foundrouter = SearchRouter(ip);
+                if (foundrouter)
                 {
-                    found = true;
                     list.Add(ip);
                     Console.WriteLine("router behind: " + ip);
-                    using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
-                    {
-                        streamwriter.WriteLine(ip);
-                        streamwriter.Close();
-                    }
                 }
-                else
+                if (!foundrouter | ip == IPEnd)
                 {
-                    found = false;
+                    if (templist.Count == 1)
+                    {
+                        addToFirewall(templist[0]);
+                        using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
+                        {
+                            streamwriter.WriteLine(templist[0]);
+                            streamwriter.Close();
+                        }
+                    }
+                    if (templist.Count > 1)
+                    {
+                        addToFirewall(templist[0] + "-" + templist[templist.Count - 1]);
+                        using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
+                        {
+                            streamwriter.WriteLine(templist[0] + "-" + templist[templist.Count - 1]);
+                            streamwriter.Close();
+                        }
+                    }
+                    templist = list;
                     list.Clear();
                     Console.WriteLine(ip);
                 }
-                if (tempfound & !found & templist.Count == 1)
-                    addToFirewall(tempip);
-                if (tempfound & !found & templist.Count > 1)
-                    addToFirewall(templist[0] + "-" + templist[templist.Count - 1]);
                 IP3++;
                 if (IP3 > 255)
                 {
@@ -109,7 +114,7 @@ namespace RouterBehindChecker
                 }
                 Thread.Sleep(1);
             }
-            while (!(IP0 == Convert.ToInt32(IPEndElements[0]) & IP1 == Convert.ToInt32(IPEndElements[1]) & IP2 == Convert.ToInt32(IPEndElements[2]) & IP3 == Convert.ToInt32(IPEndElements[3])));
+            while (ip != IPEnd);
         }
         private static bool SearchRouter(string IP)
         {
