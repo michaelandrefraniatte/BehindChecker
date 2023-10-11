@@ -141,6 +141,7 @@ namespace RouterBehindChecker
             newRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
             newRule.EdgeTraversal = false;
             firewallpolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+            firewallpolicy.Rules.Remove(IP);
             firewallpolicy.Rules.Add(newRule);
         }
         public static bool hasAdminRights()
