@@ -7,9 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Diagnostics;
 using System.Windows.Forms;
-using NetFwTypeLib;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RouterBehindChecker
 {
@@ -24,8 +22,6 @@ namespace RouterBehindChecker
         public static Thread thread;
         public static uint CurrentResolution = 0;
         public static int processid = 0;
-        private static INetFwRule2 newRule;
-        private static INetFwPolicy2 firewallpolicy;
         private static List<string> list = new List<string>(), templist = new List<string>();
         private static string ip;
         static void Main(string[] args)
@@ -70,7 +66,6 @@ namespace RouterBehindChecker
                 {
                     if (templist.Count == 1)
                     {
-                        addToFirewall(templist[0]);
                         using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
                         {
                             streamwriter.WriteLine(templist[0]);
@@ -79,7 +74,6 @@ namespace RouterBehindChecker
                     }
                     if (templist.Count > 1)
                     {
-                        addToFirewall(templist[0] + "-" + templist[templist.Count - 1]);
                         using (StreamWriter streamwriter = File.AppendText(IPStart + "-" + IPEnd + ".txt"))
                         {
                             streamwriter.WriteLine(templist[0] + "-" + templist[templist.Count - 1]);
@@ -128,21 +122,6 @@ namespace RouterBehindChecker
             {
                 return false;
             }
-        }
-        private static void addToFirewall(string IP)
-        {
-            newRule = (INetFwRule2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWRule"));
-            newRule.Name = IP;
-            newRule.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
-            newRule.RemoteAddresses = IP;
-            newRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
-            newRule.Enabled = true;
-            newRule.InterfaceTypes = "All";
-            newRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
-            newRule.EdgeTraversal = false;
-            firewallpolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-            firewallpolicy.Rules.Remove(IP);
-            firewallpolicy.Rules.Add(newRule);
         }
         public static bool hasAdminRights()
         {
