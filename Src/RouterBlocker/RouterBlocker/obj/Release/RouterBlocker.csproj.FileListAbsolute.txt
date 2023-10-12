@@ -1,0 +1,8 @@
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\bin\Release\RouterBlocker.exe.config
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\bin\Release\RouterBlocker.exe
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\bin\Release\RouterBlocker.pdb
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\obj\Release\RouterBlocker.csproj.AssemblyReference.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\obj\Release\RouterBlocker.csproj.SuggestedBindingRedirects.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\obj\Release\RouterBlocker.csproj.CoreCompileInputs.cache
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\obj\Release\RouterBlocker.exe
+C:\Users\micha\Documents\github\BehindChecker\Src\RouterBlocker\RouterBlocker\obj\Release\RouterBlocker.pdb
